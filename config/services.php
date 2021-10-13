@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'wps_svc' => [
+        'url' => env('WPS_URL'),
+        'port' => env('WPS_PORT'),
+    ],
+
 ];
