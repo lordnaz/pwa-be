@@ -32,4 +32,6 @@ Route::group([
 ], function($router){
     Route::post('category', 'ProductController@category');
     Route::post('countries', 'ProductController@countries');
+    Route::post('product_owners', 'ProductController@product_owners');
+    Route::post('get_products', 'ProductController@get_products');
 });
