@@ -35,4 +35,10 @@ return [
         'port' => env('WPS_PORT'),
     ],
 
+    'otp_svc' => [
+        'url' => env('MMP_PAYMENT_URL'),
+        'pub_key' => env('MMP_PAYMENT_PUBLIC_KEY'),
+        'priv_key' => env('MMP_PAYMENT_PRIVATE_KEY'),
+    ],
+
 ];
