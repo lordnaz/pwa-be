@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use App\Exceptions\ExceptionHandler as ErrHandler;
 
+use App\Models\Transaction;
+
 class OtpController extends Controller
 {
     //
@@ -60,6 +62,13 @@ class OtpController extends Controller
         $tokenObj = $this->get_token();
         $token = $tokenObj->Token;
 
+        $currentdt = date('Y-m-d H:i:s');
+
+        $datetime = date('YmdHis');
+        $unique_id = uniqid();
+
+        $trx_id = strtoupper($unique_id)."_".$datetime;
+
         $request = Http::withHeaders([
             'Content-Type' => 'application/json',
             'KEY' => $this->pub_key
@@ -69,7 +78,50 @@ class OtpController extends Controller
             'OTP' => $req->OTP,
         ]);
 
-        return $request->json();
+        if($request['Code'] == "000"){
+
+            $data = [ 
+                'status' => $request['Message'],
+                'Code' => $request['Code'],
+                'TransactionId' => $request['TransactionId'],
+                'Internal_TrxId' => $trx_id
+            ];
+
+            // type of status (failed/success transaction stored in DB)
+            // 1 - SUCCESS
+            // 2 - FAILED
+            
+            $create_trx = Transaction::create([
+                'internal_trx' => $trx_id,
+                'mmp_trx' => $request['TransactionId'],
+                'status' => "SUCCESS",
+                'code' => $request['Code'],
+                'message' => $request['Message'],
+                'created_at' => $currentdt,
+                'updated_at' => $currentdt
+            ]);
+
+        }else{
+
+            $data = [ 
+                'status' => $request['Message'],
+                'Code' => $request['Code'],
+                'TransactionId' => $request['TransactionId']
+            ];
+
+            $create_trx = Transaction::create([
+                'internal_trx' => $trx_id,
+                'mmp_trx' => $request['TransactionId'],
+                'status' => "FAILED",
+                'code' => $request['Code'],
+                'message' => $request['Message'],
+                'created_at' => $currentdt,
+                'updated_at' => $currentdt
+            ]);
+        }
+
+        return response()->json($data);
+        // return $request->json();
     }
 
     public function pay_status(Request $req){
