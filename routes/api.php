@@ -35,7 +35,7 @@ Route::group([
     Route::post('product_owners', 'ProductController@product_owners');
     Route::post('get_products', 'ProductController@get_products');
     Route::post('get_otp', 'OtpController@get_otp');
-    // Route::get('get_token', 'OtpController@get_token');
+    Route::get('get_token', 'OtpController@get_token');
     Route::post('validate_otp', 'OtpController@validate_otp');
     Route::post('pay_status', 'OtpController@pay_status');
     Route::post('resend_otp', 'OtpController@resend_otp');
